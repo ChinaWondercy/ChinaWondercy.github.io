@@ -1,31 +1,52 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我 - 邬驰宇</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
     <header>
         <nav>
+            <div class="logo">Wu ChiYu</div>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
                 <li><a href="portfolio.html">Portfolio</a></li>
             </ul>
         </nav>
     </header>
+
     <main>
         <article>
-            <h2>how to contact me</h2>
-            <a href="mailto:admin@example.com">联系管理员</a>
-            <a href="tel:+8613800138000">拨打电话</a>
+            <h2>如何联系我</h2>
+            <div class="contact-links">
+                <a href="mailto:admin@example.com">📧 发送邮件联系管理员</a>
+                <a href="tel:+8613800138000">📞 拨打电话联系我</a>
+            </div>
+            <form action="#" method="post" style="margin-top: 1.5rem;">
+                <label for="name">姓名</label>
+                <input id="name" name="name" type="text" style="display:block;width:100%;max-width:400px;margin:0.5rem auto 1rem;padding:0.5rem;border:1px solid #e5e7eb;border-radius:0.375rem;">
+                <label for="message">留言</label>
+                <textarea id="message" name="message" rows="4" style="display:block;width:100%;max-width:400px;margin:0.5rem auto 1rem;padding:0.5rem;border:1px solid #e5e7eb;border-radius:0.375rem;"></textarea>
+                <button type="submit" class="submit-btn">提交</button>
+            </form>
         </article>
-        <aside>
 
+        <aside>
+            <p>欢迎通过以上方式与我取得联系。工作时间通常为周一至周五 9:00 - 18:00。</p>
         </aside>
     </main>
+
     <footer>
-        <p>Copyright 2025 邬驰宇</p>
+        <p>&copy; 2025 邬驰宇. 版权所有。</p>
     </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="script.js"></script>
+
+</body>
 </html>
