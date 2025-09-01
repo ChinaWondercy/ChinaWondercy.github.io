@@ -1191,6 +1191,14 @@ function throttle(func, limit) {
 
 // ================== 页面加载完成后的初始化 ==================
 document.addEventListener('DOMContentLoaded', () => {
+    // 初始化粒子背景系统
+    if (document.getElementById('particle-canvas')) {
+        new ParticleSystem();
+    }
+    
+    // 初始化创意功能
+    initCreativeFeatures();
+    
     // 初始化页面管理器
     const pageManager = new PageManager();
     
@@ -1232,6 +1240,203 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 });
+
+// ================== 粒子背景系统 ==================
+class ParticleSystem {
+    constructor() {
+        this.canvas = document.getElementById('particle-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: 0, y: 0 };
+        this.particleCount = 150;
+        this.mouseRadius = 100;
+        
+        this.init();
+    }
+
+    init() {
+        this.setupCanvas();
+        this.createParticles();
+        this.bindEvents();
+        this.animate();
+    }
+
+    setupCanvas() {
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+    }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    createParticles() {
+        this.particles = [];
+        for (let i = 0; i < this.particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                originalX: 0,
+                originalY: 0,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2 + 1,
+                opacity: Math.random() * 0.8 + 0.2,
+                twinkle: Math.random() * 0.02 + 0.01
+            });
+        }
+        // 设置原始位置
+        this.particles.forEach(particle => {
+            particle.originalX = particle.x;
+            particle.originalY = particle.y;
+        });
+    }
+
+    bindEvents() {
+        document.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            this.mouse.x = -1000;
+            this.mouse.y = -1000;
+        });
+    }
+
+    updateParticles() {
+        this.particles.forEach(particle => {
+            // 计算与鼠标的距离
+            const dx = this.mouse.x - particle.x;
+            const dy = this.mouse.y - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // 鼠标影响范围内的粒子
+            if (distance < this.mouseRadius) {
+                const force = (this.mouseRadius - distance) / this.mouseRadius;
+                const angle = Math.atan2(dy, dx);
+                particle.vx += Math.cos(angle) * force * 0.3;
+                particle.vy += Math.sin(angle) * force * 0.3;
+            }
+
+            // 自然运动
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // 回归原位的力
+            const returnForceX = (particle.originalX - particle.x) * 0.01;
+            const returnForceY = (particle.originalY - particle.y) * 0.01;
+            particle.vx += returnForceX;
+            particle.vy += returnForceY;
+
+            // 阻尼
+            particle.vx *= 0.98;
+            particle.vy *= 0.98;
+
+            // 闪烁效果
+            particle.opacity += particle.twinkle;
+            if (particle.opacity > 1 || particle.opacity < 0.2) {
+                particle.twinkle *= -1;
+            }
+
+            // 边界检查
+            if (particle.x < 0 || particle.x > this.canvas.width) {
+                particle.originalX = Math.random() * this.canvas.width;
+                particle.x = particle.originalX;
+            }
+            if (particle.y < 0 || particle.y > this.canvas.height) {
+                particle.originalY = Math.random() * this.canvas.height;
+                particle.y = particle.originalY;
+            }
+        });
+    }
+
+    drawParticles() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // 绘制粒子
+        this.particles.forEach(particle => {
+            this.ctx.save();
+            this.ctx.globalAlpha = particle.opacity;
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+        });
+
+        // 绘制连接线
+        this.drawConnections();
+        
+        // 绘制鼠标附近的星云效果
+        this.drawMouseEffect();
+    }
+
+    drawConnections() {
+        this.particles.forEach((particle, i) => {
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const other = this.particles[j];
+                const dx = particle.x - other.x;
+                const dy = particle.y - other.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 80) {
+                    this.ctx.save();
+                    this.ctx.globalAlpha = (80 - distance) / 80 * 0.3;
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 0.5;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(particle.x, particle.y);
+                    this.ctx.lineTo(other.x, other.y);
+                    this.ctx.stroke();
+                    this.ctx.restore();
+                }
+            }
+        });
+    }
+
+    drawMouseEffect() {
+        if (this.mouse.x < 0 || this.mouse.y < 0) return;
+
+        // 绘制鼠标光晕
+        const gradient = this.ctx.createRadialGradient(
+            this.mouse.x, this.mouse.y, 0,
+            this.mouse.x, this.mouse.y, this.mouseRadius
+        );
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        this.ctx.save();
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(this.mouse.x, this.mouse.y, this.mouseRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.restore();
+
+        // 在鼠标附近生成额外的粒子效果
+        for (let i = 0; i < 5; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * 30 + 10;
+            const x = this.mouse.x + Math.cos(angle) * radius;
+            const y = this.mouse.y + Math.sin(angle) * radius;
+
+            this.ctx.save();
+            this.ctx.globalAlpha = Math.random() * 0.5 + 0.3;
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, Math.random() * 2 + 1, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+        }
+    }
+
+    animate() {
+        this.updateParticles();
+        this.drawParticles();
+        requestAnimationFrame(() => this.animate());
+    }
+}
 
 // ================== GitHub Portfolio 管理器 ==================
 class GitHubPortfolioManager {
@@ -2075,6 +2280,376 @@ class IndexProjectsManager {
 // ================== 初始化Index页面项目 ==================
 function initIndexProjects() {
     new IndexProjectsManager();
+}
+
+// ================== 创意功能集合 ==================
+
+// Konami Code 彩蛋系统
+class KonamiCode {
+    constructor() {
+        this.sequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+        this.userInput = [];
+        this.isActivated = false;
+        this.init();
+    }
+
+    init() {
+        document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+    }
+
+    handleKeyPress(e) {
+        this.userInput.push(e.code);
+        
+        // 只保留最近10个按键
+        if (this.userInput.length > 10) {
+            this.userInput.shift();
+        }
+
+        // 检查是否匹配序列
+        if (this.userInput.length === 10 && this.checkSequence()) {
+            this.activateEasterEgg();
+        }
+    }
+
+    checkSequence() {
+        for (let i = 0; i < this.sequence.length; i++) {
+            if (this.userInput[i] !== this.sequence[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    activateEasterEgg() {
+        if (this.isActivated) return;
+        this.isActivated = true;
+
+        console.log('🎮 Konami Code 激活！');
+        
+        // 创建8位游戏风格的覆盖层
+        this.createRetroOverlay();
+        
+        // 播放音效
+        this.playSound();
+        
+        // 启动贪吃蛇游戏
+        setTimeout(() => {
+            this.startSnakeGame();
+        }, 2000);
+    }
+
+    createRetroOverlay() {
+        const overlay = document.createElement('div');
+        overlay.id = 'retro-overlay';
+        overlay.innerHTML = `
+            <div class="retro-container">
+                <div class="retro-header">
+                    <h1 class="retro-title">🎮 KONAMI CODE ACTIVATED! 🎮</h1>
+                    <p class="retro-subtitle">Welcome to the Matrix... I mean, Retro Mode!</p>
+                </div>
+                <div class="retro-content">
+                    <div class="matrix-text">
+                        <div class="matrix-line">01001000 01100101 01101100 01101100 01101111</div>
+                        <div class="matrix-line">01010111 01101111 01110010 01101100 01100100</div>
+                        <div class="matrix-line">Loading Snake Game...</div>
+                    </div>
+                </div>
+                <button class="retro-close" onclick="this.parentElement.parentElement.remove(); konamiCode.isActivated = false;">× Close</button>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        // 添加动画效果
+        setTimeout(() => overlay.classList.add('active'), 100);
+    }
+
+    playSound() {
+        // 创建音频上下文播放8位音效
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+            oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+            oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    startSnakeGame() {
+        const gameContainer = document.querySelector('.retro-content');
+        if (!gameContainer) return;
+
+        gameContainer.innerHTML = `
+            <canvas id="snake-game" width="400" height="400"></canvas>
+            <div class="game-controls">
+                <p>Use WASD or Arrow Keys to control the snake!</p>
+                <p>Score: <span id="score">0</span></p>
+            </div>
+        `;
+
+        new SnakeGame();
+    }
+}
+
+// 简化版贪吃蛇游戏
+class SnakeGame {
+    constructor() {
+        this.canvas = document.getElementById('snake-game');
+        this.ctx = this.canvas.getContext('2d');
+        this.gridSize = 20;
+        this.snake = [{x: 200, y: 200}];
+        this.direction = {x: 0, y: 0};
+        this.food = this.generateFood();
+        this.score = 0;
+        this.gameRunning = true;
+        
+        this.bindEvents();
+        this.gameLoop();
+    }
+
+    bindEvents() {
+        document.addEventListener('keydown', (e) => {
+            if (!this.gameRunning) return;
+            
+            switch(e.code) {
+                case 'ArrowUp':
+                case 'KeyW':
+                    if (this.direction.y === 0) this.direction = {x: 0, y: -this.gridSize};
+                    break;
+                case 'ArrowDown':
+                case 'KeyS':
+                    if (this.direction.y === 0) this.direction = {x: 0, y: this.gridSize};
+                    break;
+                case 'ArrowLeft':
+                case 'KeyA':
+                    if (this.direction.x === 0) this.direction = {x: -this.gridSize, y: 0};
+                    break;
+                case 'ArrowRight':
+                case 'KeyD':
+                    if (this.direction.x === 0) this.direction = {x: this.gridSize, y: 0};
+                    break;
+            }
+        });
+    }
+
+    generateFood() {
+        return {
+            x: Math.floor(Math.random() * (this.canvas.width / this.gridSize)) * this.gridSize,
+            y: Math.floor(Math.random() * (this.canvas.height / this.gridSize)) * this.gridSize
+        };
+    }
+
+    update() {
+        if (!this.gameRunning) return;
+
+        const head = {
+            x: this.snake[0].x + this.direction.x,
+            y: this.snake[0].y + this.direction.y
+        };
+
+        // 检查碰撞
+        if (head.x < 0 || head.x >= this.canvas.width || 
+            head.y < 0 || head.y >= this.canvas.height ||
+            this.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+            this.gameRunning = false;
+            this.showGameOver();
+            return;
+        }
+
+        this.snake.unshift(head);
+
+        // 检查是否吃到食物
+        if (head.x === this.food.x && head.y === this.food.y) {
+            this.score += 10;
+            document.getElementById('score').textContent = this.score;
+            this.food = this.generateFood();
+        } else {
+            this.snake.pop();
+        }
+    }
+
+    draw() {
+        // 清空画布
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // 绘制蛇
+        this.ctx.fillStyle = '#0f0';
+        this.snake.forEach(segment => {
+            this.ctx.fillRect(segment.x, segment.y, this.gridSize, this.gridSize);
+        });
+
+        // 绘制食物
+        this.ctx.fillStyle = '#f00';
+        this.ctx.fillRect(this.food.x, this.food.y, this.gridSize, this.gridSize);
+    }
+
+    showGameOver() {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '24px monospace';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('Game Over!', this.canvas.width / 2, this.canvas.height / 2 - 20);
+        this.ctx.font = '16px monospace';
+        this.ctx.fillText(`Final Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 20);
+    }
+
+    gameLoop() {
+        this.update();
+        this.draw();
+        
+        if (this.gameRunning) {
+            setTimeout(() => this.gameLoop(), 150);
+        }
+    }
+}
+
+// 动态标题管理器
+class DynamicTitle {
+    constructor() {
+        this.originalTitle = document.title;
+        this.originalFavicon = document.querySelector('link[rel="icon"]')?.href || '';
+        this.awayTitle = '别走呀，快回来！QAQ';
+        this.init();
+    }
+
+    init() {
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.setAwayMode();
+            } else {
+                this.setActiveMode();
+            }
+        });
+
+        // 窗口焦点事件
+        window.addEventListener('blur', () => this.setAwayMode());
+        window.addEventListener('focus', () => this.setActiveMode());
+    }
+
+    setAwayMode() {
+        document.title = this.awayTitle;
+        this.changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😢</text></svg>');
+    }
+
+    setActiveMode() {
+        document.title = this.originalTitle;
+        this.changeFavicon('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">😊</text></svg>');
+    }
+
+    changeFavicon(href) {
+        let link = document.querySelector('link[rel="icon"]');
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.href = href;
+    }
+}
+
+// 自定义光标系统
+class CustomCursor {
+    constructor() {
+        this.cursor = null;
+        this.cursorDot = null;
+        this.init();
+    }
+
+    init() {
+        this.createCursor();
+        this.bindEvents();
+        this.hiddenDefaultCursor();
+    }
+
+    createCursor() {
+        // 主光标
+        this.cursor = document.createElement('div');
+        this.cursor.className = 'custom-cursor';
+        document.body.appendChild(this.cursor);
+
+        // 光标中心点
+        this.cursorDot = document.createElement('div');
+        this.cursorDot.className = 'custom-cursor-dot';
+        document.body.appendChild(this.cursorDot);
+    }
+
+    bindEvents() {
+        document.addEventListener('mousemove', (e) => {
+            this.cursor.style.left = e.clientX + 'px';
+            this.cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                this.cursorDot.style.left = e.clientX + 'px';
+                this.cursorDot.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // 悬停在可点击元素上的效果
+        const clickableElements = 'a, button, input, textarea, select, [onclick], [role="button"]';
+        
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.matches(clickableElements)) {
+                this.cursor.classList.add('hover');
+                this.cursorDot.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.matches(clickableElements)) {
+                this.cursor.classList.remove('hover');
+                this.cursorDot.classList.remove('hover');
+            }
+        });
+
+        // 点击效果
+        document.addEventListener('mousedown', () => {
+            this.cursor.classList.add('click');
+            this.cursorDot.classList.add('click');
+        });
+
+        document.addEventListener('mouseup', () => {
+            this.cursor.classList.remove('click');
+            this.cursorDot.classList.remove('click');
+        });
+    }
+
+    hiddenDefaultCursor() {
+        document.body.style.cursor = 'none';
+        const style = document.createElement('style');
+        style.textContent = `
+            *, *::before, *::after {
+                cursor: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// 创意功能初始化
+function initCreativeFeatures() {
+    // 初始化所有创意功能
+    window.konamiCode = new KonamiCode();
+    window.dynamicTitle = new DynamicTitle();
+    window.customCursor = new CustomCursor();
+    
+    console.log('🎨 创意功能已全部激活！');
+    console.log('🎮 试试输入 Konami Code：↑↑↓↓←→←→BA');
 }
 
 // ================== 更新Portfolio初始化 ==================
