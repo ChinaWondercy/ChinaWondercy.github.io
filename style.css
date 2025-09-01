@@ -9,13 +9,26 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
+/* ================== 粒子背景样式 ================== */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 body {
     font-family: 'Helvetica', 'Arial', 'Microsoft YaHei', sans-serif;
     line-height: 1.6;
     color: #374151;
-    background-color: #f0f5ff;
+    background-color: transparent;
     padding-bottom: 2rem;
     transition: background-color 0.5s ease, color 0.5s ease;
+    position: relative;
 }
 
 /* ================== 日夜模式样式 ================== */
@@ -1782,6 +1795,197 @@ body.dark-mode .featured-card .news-link:hover {
     background: #1e293b;
     color: #60a5fa;
     border-color: #60a5fa;
+}
+
+/* ================== 创意功能样式 ================== */
+
+/* Konami Code 复古叠加层 */
+#retro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    font-family: 'Courier New', monospace;
+}
+
+#retro-overlay.active {
+    opacity: 1;
+}
+
+.retro-container {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0, 255, 0, 0.3);
+}
+
+.retro-title {
+    color: #00ff00;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #00ff00;
+    animation: retro-glow 2s infinite alternate;
+}
+
+.retro-subtitle {
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.matrix-text {
+    background: #000;
+    padding: 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+    border: 1px solid #00ff00;
+}
+
+.matrix-line {
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    margin: 0.5rem 0;
+    animation: matrix-scroll 1s ease-in-out;
+}
+
+.retro-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #00ff00;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.retro-close:hover {
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+#snake-game {
+    border: 2px solid #00ff00;
+    background: #000;
+    margin: 1rem auto;
+    display: block;
+}
+
+.game-controls {
+    color: #ffffff;
+    margin-top: 1rem;
+}
+
+.game-controls p {
+    margin: 0.5rem 0;
+}
+
+#score {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+@keyframes retro-glow {
+    from { text-shadow: 0 0 10px #00ff00; }
+    to { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+}
+
+@keyframes matrix-scroll {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 自定义光标样式 */
+.custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid #3b82f6;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    backdrop-filter: blur(2px);
+}
+
+.custom-cursor-dot {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: #3b82f6;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+}
+
+.custom-cursor.hover {
+    width: 40px;
+    height: 40px;
+    background: rgba(59, 130, 246, 0.2);
+    border: 2px solid #3b82f6;
+}
+
+.custom-cursor-dot.hover {
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+}
+
+.custom-cursor.click {
+    width: 16px;
+    height: 16px;
+    background: rgba(59, 130, 246, 0.6);
+}
+
+.custom-cursor-dot.click {
+    width: 2px;
+    height: 2px;
+}
+
+/* 日夜模式下的自定义光标 */
+body.dark-mode .custom-cursor {
+    background: rgba(0, 0, 0, 0.8);
+    border-color: #60a5fa;
+}
+
+body.dark-mode .custom-cursor-dot {
+    background: #60a5fa;
+}
+
+body.dark-mode .custom-cursor.hover {
+    background: rgba(96, 165, 250, 0.2);
+    border-color: #60a5fa;
+}
+
+body.dark-mode .custom-cursor-dot.hover {
+    background: #60a5fa;
+}
+
+body.dark-mode .custom-cursor.click {
+    background: rgba(96, 165, 250, 0.6);
+}
+
+/* 粒子背景在日夜模式下的变化 */
+body.dark-mode #particle-canvas {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
 }
 
 /* 响应式设计 */
