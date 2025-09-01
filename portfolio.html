@@ -1,40 +1,135 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集 - 邬驰宇</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
     <header>
         <nav>
+            <div class="logo">Wu ChiYu</div>
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="portfolio.html">Portfolio</a></li>
+                <li><a href="portfolio.html" class="active">Portfolio</a></li>
             </ul>
         </nav>
     </header>
-    <main>
-        <article>
-            <h2>我引以为豪的事情</h2>
-            <ol>
-                <li>2024年挑战杯三等奖</li>
-                <li>参与国创《》</li>
-                <li>主持国创《》</li>
-            </ol>
-            <h2>我擅长的技能</h2>
-            <ul>
-                <li>Python</li>
-                <li>valorant</li>
-                <img src="images/2.jpg" alt="赋能"><hr>
-            </ul>
-        </article>
-        <aside>
 
-        </aside>
+    <main class="portfolio-main">
+        <!-- 页面介绍区域 -->
+        <section class="portfolio-hero">
+            <div class="portfolio-intro">
+                <h1>我的作品集</h1>
+                <p class="portfolio-subtitle">展示我在前端开发学习过程中创建的项目和作品</p>
+                <div class="portfolio-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">完成项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">技术栈</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">学习月数</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目展示区域 -->
+        <section class="projects-section">
+            <div class="projects-header">
+                <h2>我的GitHub项目</h2>
+                <p>从GitHub获取的真实项目，按编程语言动态筛选</p>
+                
+                <!-- GitHub用户名配置 -->
+                <div class="github-config">
+                    <label for="github-username">GitHub 用户名:</label>
+                    <input type="text" id="github-username" placeholder="输入GitHub用户名" value="ChinaWondercy">
+                    <button id="load-projects" class="load-btn">加载项目</button>
+                </div>
+                
+                <!-- 加载状态 -->
+                <div class="loading-container" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>正在从GitHub加载项目...</p>
+                </div>
+                
+                <!-- 错误提示 -->
+                <div class="error-container" style="display: none;">
+                    <p class="error-message"></p>
+                    <button id="retry-load" class="retry-btn">重试</button>
+                </div>
+                
+                <!-- 动态筛选按钮容器 -->
+                <div class="filter-buttons" id="language-filters">
+                    <!-- 按钮将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 项目网格容器 -->
+            <div class="projects-grid" id="projects-container">
+                <!-- 项目卡片将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 空状态提示 -->
+            <div class="empty-state" style="display: none;">
+                <h3>🌟 暂无项目</h3>
+                <p>请检查GitHub用户名或网络连接</p>
+            </div>
+        </section>
+
+        <!-- 技能与工具区域 -->
+        <section class="skills-tools-section">
+            <h2>技能与工具</h2>
+            <div class="skills-categories">
+                <div class="skill-category">
+                    <h3>前端技术</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">HTML5</span>
+                        <span class="skill-item">CSS3</span>
+                        <span class="skill-item">JavaScript ES6+</span>
+                        <span class="skill-item">Vue.js</span>
+                        <span class="skill-item">React</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>开发工具</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">VS Code</span>
+                        <span class="skill-item">Git</span>
+                        <span class="skill-item">Chrome DevTools</span>
+                        <span class="skill-item">Figma</span>
+                        <span class="skill-item">Postman</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>学习中</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Node.js</span>
+                        <span class="skill-item">TypeScript</span>
+                        <span class="skill-item">Webpack</span>
+                        <span class="skill-item">Docker</span>
+                        <span class="skill-item">MongoDB</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
     <footer>
-        <p>Copyright 2025 邬驰宇</p>
+        <p>&copy; 2025 邬驰宇. 版权所有。</p>
     </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="script.js"></script>
+
+</body>
 </html>
