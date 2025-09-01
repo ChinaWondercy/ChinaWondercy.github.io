@@ -1,48 +1,242 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 邬驰宇</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js 图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Marked.js Markdown解析库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="about-page">
+
     <header>
         <nav>
+            <div class="logo">Wu ChiYu</div>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="about.html" class="active">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="portfolio.html">Portfolio</a></li>
             </ul>
         </nav>
     </header>
-    <main>
-        <article>
-            <h2>my background and skills</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>小学</th>
-                        <th>初中</th>
-                        <th>高中</th>
-                        <th>大学</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                    <td>宁海县城东实验小学</td> 
-                    <td>宁波市蛟川书院</td>
-                    <td>宁波市镇海中学</td>
-                    <td><a href="https://www.hzcu.edu.cn/" target="_blank" rel="noopener noreferrer">浙江大学城市学院</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </article>
-        <aside>
 
+    <main class="about-main">
+        <!-- 左侧主要内容 -->
+        <div class="about-content">
+            <!-- 教育背景 -->
+            <section class="education-section">
+                <h2>我的教育背景</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>小学</th>
+                            <th>初中</th>
+                            <th>高中</th>
+                            <th>大学</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>宁海县城东实验小学</td>
+                            <td>宁波市蛟川书院</td>
+                            <td>宁波市镇海中学</td>
+                            <td><a href="https://www.hzcu.edu.cn/" target="_blank" rel="noopener noreferrer">浙江大学城市学院</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 兴趣爱好区域 -->
+            <section class="hobbies-section">
+                <h2>我的兴趣爱好</h2>
+                <!-- 兴趣爱好卡片将通过JavaScript动态生成 -->
+            </section>
+
+            <!-- 互动式人生时间轴 -->
+            <section class="timeline-section">
+                <h2>我的故事</h2>
+                <div class="timeline">
+                    <div class="timeline-item left" data-year="2025">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025年</div>
+                            <h3>开始前端学习</h3>
+                            <p class="timeline-description">开始系统学习HTML、CSS、JavaScript等前端技术</p>
+                            <div class="timeline-details">
+                                <p>正式踏入前端开发领域，开始构建个人主页项目，学习现代Web开发技术栈。</p>
+                                <p>掌握了响应式设计、CSS动画、JavaScript交互等核心技能。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item right" data-year="2024">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2024年</div>
+                            <h3>进入浙江大学城市学院</h3>
+                            <p class="timeline-description">开始大学生活，选择计算机相关专业</p>
+                            <div class="timeline-details">
+                                <p>进入浙江大学城市学院学习，选择了计算机科学与技术专业。</p>
+                                <p>开始接触编程基础，学习Python、数据结构等课程。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item left" data-year="2023">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2023年</div>
+                            <h3>高中毕业</h3>
+                            <p class="timeline-description">完成高中学业，准备进入大学</p>
+                            <div class="timeline-details">
+                                <p>完成高中学业，在高考中取得优异成绩。</p>
+                                <p>开始规划未来的学习和职业发展方向。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item right" data-year="2022">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2022年</div>
+                            <h3>接触编程</h3>
+                            <p class="timeline-description">第一次接触编程，开始对计算机科学产生兴趣</p>
+                            <div class="timeline-details">
+                                <p>在高中的信息技术课上第一次接触编程。</p>
+                                <p>开始对计算机科学和软件开发产生浓厚兴趣。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item left" data-year="2020">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2020年</div>
+                            <h3>高中生活开始</h3>
+                            <p class="timeline-description">进入高中，开始新的学习阶段</p>
+                            <div class="timeline-details">
+                                <p>进入高中学习，开始为未来的大学学习做准备。</p>
+                                <p>在数学和物理等学科上表现出色。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 轻量级 Markdown 博客 -->
+            <section class="blog-section">
+                <h2>我的博客</h2>
+                <div class="blog-container">
+                    <div class="blog-posts-list">
+                        <h3>文章列表</h3>
+                        <div class="posts-list">
+                            <!-- 文章列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <div class="blog-content">
+                        <div class="blog-placeholder">
+                            <h3>选择一篇文章开始阅读</h3>
+                            <p>点击左侧文章标题即可开始阅读</p>
+                        </div>
+                        <div class="blog-article" style="display: none;">
+                            <!-- 文章内容将通过JavaScript动态渲染 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 右侧侧边栏 -->
+        <aside class="about-sidebar">
+            <div class="about-intro">
+                <h3>关于我</h3>
+                <p>正在学习前端开发，热爱编程与设计。</p>
+                <p>目前就读于浙江大学城市学院，期待未来能成为一名优秀的全栈工程师。</p>
+                <p>喜欢篮球、音乐和旅行。</p>
+            </div>
+            
+            <!-- 技能雷达图区域 -->
+            <div class="radar-chart-section">
+                <h4>技能雷达图</h4>
+                <div class="radar-chart-container">
+                    <canvas id="skillsRadarChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 动态技能条区域 -->
+            <div class="skills-section">
+                <h4>技能熟练度</h4>
+                <div class="skill-bars">
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">JavaScript</span>
+                            <span class="skill-percentage">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="80"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">HTML/CSS</span>
+                            <span class="skill-percentage">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="85"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">Python</span>
+                            <span class="skill-percentage">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="75"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">Vue.js</span>
+                            <span class="skill-percentage">70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="70"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">React</span>
+                            <span class="skill-percentage">65%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="65"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">Node.js</span>
+                            <span class="skill-percentage">60%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-percentage="60"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </aside>
     </main>
+
     <footer>
-        <p>Copyright 2025 邬驰宇</p>
+        <p>Copyright © 2025 邬驰宇. All rights reserved.</p>
     </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="script.js"></script>
+
+</body>
 </html>
